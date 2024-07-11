@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Monthly Expense Calculator</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            max-width: 800px;
+            margin: 50px auto;
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            text-align: center;
+            margin-bottom: 20px;
+            color: #007bff;
+        }
+        label {
+            margin: 15px 0 5px;
+            font-weight: bold;
+        }
+        input, select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            margin-bottom: 10px;
+        }
+        button {
+            width: 100%;
+            padding: 10px;
+            background: #007bff;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+        button:hover {
+            background: #0056b3;
+        }
+        .btn-edit {
+            background-color: #ffc107;
+            color: white;
+        }
+        .btn-edit:hover {
+            background-color: #e0a800;
+        }
+        .tab-content {
+            margin-top: 20px;
+        }
+        .nav-tabs .nav-link.active {
+            background-color: #007bff;
+            color: white;
+        }
+        .result, .expense-table, .settlement-table {
+            margin-top: 20px;
+            background: #e9ecef;
+            padding: 20px;
+            border-radius: 8px;
+        }
+        .result p, .expense-table table, .settlement-table table {
+            margin: 0;
+            padding: 5px 0;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        table, th, td {
+            border: 1px solid #ddd;
+        }
+        th, td {
+            padding: 8px;
+            text-align: left;
+        }
+        .spinner-border {
+            width: 2rem;
+            height: 2rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Monthly Expense Calculator</h1>
+
+        <ul class="nav nav-tabs" id="myTab" role="tablist">
+            <li class="nav-item">
+                <a class="nav-link active" id="add-expense-tab" data-toggle="tab" href="#add-expense" role="tab" aria-controls="add-expense" aria-selected="true">Add Expense</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" id="view-expenses-tab" data-toggle="tab" href="#view-expenses" role="tab" aria-controls="view-expenses" aria-selected="false">View Expenses</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" id="settlements-tab" data-toggle="tab" href="#settlements" role="tab" aria-controls="settlements" aria-selected="false">Settlements</a>
+            </li>
+        </ul>
+
+        <div class="tab-content" id="myTabContent">
+            <!-- Add Expense Tab -->
+            <div class="tab-pane fade show active" id="add-expense" role="tabpanel" aria-labelledby="add-expense-tab">
+                <div class="form-group">
+                    <label for="date">Date</label>
+                    <input type="date" id="date" class="form-control" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="particulars">Particulars</label>
+                    <input type="text" id="particulars" class="form-control" placeholder="Enter expense particulars" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="amount">Amount</label>
+                    <input type="number" id="amount" class="form-control" placeholder="Enter amount paid" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="payer">Who Paid</label>
+                    <select id="payer" class="form-control" required>
+                        <option value="Chammu">Chammu</option>
+                        <option value="Shareef">Shareef</option>
+                        <option value="Riyaz">Riyaz</option>
+                    </select>
+                </div>
+
+                <button class="btn btn-primary btn-block" id="addExpenseButton" onclick="addExpense()">Add Expense</button>
+                
+            </div>
+
+            <!-- View Expenses Tab -->
+            <div class="tab-pane fade" id="view-expenses" role="tabpanel" aria-labelledby="view-expenses-tab">
+                <div class="expense-table mt-4" id="expenseTable">
+                    <h3>Expenses</h3>
+                    <table class="table table-striped">
+                        <thead class="thead-dark">
+                            <tr>
+                                <th>Sl. No</th>
+                                <th>Date</th>
+                                <th>Particulars</th>
+                                <th>Amount</th>
+                                <th>Payer</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="expenseTableBody">
+                        </tbody>
+                    </table>
+                </div>
+                <button class="btn btn-secondary btn-block" onclick="clearAll()">Clear All</button>
+            </div>
+
+            <!-- Settlements Tab -->
+            <div class="tab-pane fade" id="settlements" role="tabpanel" aria-labelledby="settlements-tab">
+                <div class="result mt-4" id="result"></div>
+
+                <div class="settlement-table mt-4" id="settlementTable">
+                    <h3>Settlements</h3>
+                    <table class="table table-striped">
+                        <thead class="thead-dark">
+                            <tr>
+                                <th>Payer</th>
+                                <th>Amount</th>
+                                <th>Payee</th>
+                            </tr>
+                        </thead>
+                        <tbody id="settlementTableBody">
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Success Message Modal -->
+    <div class="modal fade" id="successModal" tabindex="-1" aria-labelledby="successModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="successModalLabel">Success</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    Update successful!
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" data-dismiss="modal">OK</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Loading Spinner -->
+    <div id="loadingSpinner" class="d-none">
+        <div class="spinner-border text-primary" role="status">
+            <span class="sr-only">Loading...</span>
+        </div>
+    </div>
+
+    <script>
+        let expenses = JSON.parse(localStorage.getItem('expenses')) || [];
+        let editIndex = -1;
+
+        function addExpense() {
+    const date = document.getElementById('date').value;
+    const particulars = document.getElementById('particulars').value;
+    const amount = parseFloat(document.getElementById('amount').value) || 0;
+    const payer = document.getElementById('payer').value;
+
+    if (!date || !particulars || amount <= 0 || !payer) {
+        alert('Please fill out all required fields with valid values.');
+        return;
+    }
+
+    showSpinner();
+    setTimeout(() => {
+        if (editIndex === -1) {
+            const expense = { date, particulars, amount, payer };
+            expenses.push(expense);
+        } else {
+            expenses[editIndex] = { date, particulars, amount, payer };
+            editIndex = -1;
+            document.getElementById('addExpenseButton').textContent = 'Add Expense';
+        }
+        localStorage.setItem('expenses', JSON.stringify(expenses));
+        updateExpenseTable();
+        calculateExpenses();
+        clearForm();
+        hideSpinner();
+        showSuccessMessage();
+    }, 500); // Simulate a delay for loading
+}
+
+        function updateExpenseTable() {
+            const expenseTableBody = document.getElementById('expenseTableBody');
+            expenseTableBody.innerHTML = '';
+
+            expenses.forEach((expense, index) => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${index + 1}</td>
+                    <td>${expense.date}</td>
+                    <td>${expense.particulars}</td>
+                    <td>₹${expense.amount.toFixed(2)}</td>
+                    <td>${expense.payer}</td>
+                    <td>
+                        <button class="btn btn-sm btn-edit" onclick="editExpense(${index})">Edit</button>
+                    </td>
+                `;
+                expenseTableBody.appendChild(row);
+            });
+        }
+
+        function editExpense(index) {
+            editIndex = index;
+            const expense = expenses[index];
+            document.getElementById('date').value = expense.date;
+            document.getElementById('particulars').value = expense.particulars;
+            document.getElementById('amount').value = expense.amount;
+            document.getElementById('payer').value = expense.payer;
+            document.getElementById('addExpenseButton').textContent = 'Update Expense';
+            switchTab('add-expense-tab');
+        }
+
+        function calculateExpenses() {
+            let chammuPaid = 0;
+            let shareefPaid = 0;
+            let riyazPaid = 0;
+
+            expenses.forEach(expense => {
+                if (expense.payer === 'Chammu') {
+                    chammuPaid += expense.amount;
+                } else if (expense.payer === 'Shareef') {
+                    shareefPaid += expense.amount;
+                } else if (expense.payer === 'Riyaz') {
+                    riyazPaid += expense.amount;
+                }
+            });
+
+            const totalExpenses = chammuPaid + shareefPaid + riyazPaid;
+            const equalShare = totalExpenses / 3;
+
+            const balances = {
+                Chammu: chammuPaid - equalShare,
+                Shareef: shareefPaid - equalShare,
+                Riyaz: riyazPaid - equalShare
+            };
+
+            let result = `<p><strong>Total Expenses:</strong> ₹${totalExpenses.toFixed(2)}</p>`;
+            result += `<p><strong>Equal Share for Each:</strong> ₹${equalShare.toFixed(2)}</p>`;
+
+            for (let [person, balance] of Object.entries(balances)) {
+                if (balance < 0) {
+                    result += `<p><strong>${person} owes:</strong> ₹${Math.abs(balance).toFixed(2)}</p>`;
+                } else {
+                    result += `<p><strong>${person} is owed:</strong> ₹${balance.toFixed(2)}</p>`;
+                }
+            }
+
+            const payments = calculatePayments(balances);
+            updateSettlementTable(payments);
+
+            document.getElementById('result').innerHTML = result;
+        }
+
+        function calculatePayments(balances) {
+            const payers = [];
+            const payees = [];
+
+            for (let [person, balance] of Object.entries(balances)) {
+                if (balance < 0) {
+                    payers.push({ person, balance: Math.abs(balance) });
+                } else if (balance > 0) {
+                    payees.push({ person, balance });
+                }
+            }
+
+            const payments = [];
+            payers.forEach(payer => {
+                while (payer.balance > 0 && payees.length > 0) {
+                    const payee = payees[0];
+                    const amount = Math.min(payer.balance, payee.balance);
+
+                    payments.push({ from: payer.person, to: payee.person, amount });
+
+                    payer.balance -= amount;
+                    payee.balance -= amount;
+
+                    if (payee.balance === 0) {
+                        payees.shift();
+                    }
+                }
+            });
+
+            return payments;
+        }
+
+        function updateSettlementTable(payments) {
+            const settlementTableBody = document.getElementById('settlementTableBody');
+            settlementTableBody.innerHTML = '';
+
+            payments.forEach(payment => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${payment.from}</td>
+                    <td>₹${payment.amount.toFixed(2)}</td>
+                    <td>${payment.to}</td>
+                `;
+                settlementTableBody.appendChild(row);
+            });
+        }
+
+        function clearAll() {
+            expenses = [];
+            localStorage.setItem('expenses', JSON.stringify(expenses));
+            updateExpenseTable();
+            calculateExpenses();
+            document.getElementById('result').innerHTML = '';
+            document.getElementById('settlementTableBody').innerHTML = '';
+        }
+
+        function clearForm() {
+            document.getElementById('date').value = '';
+            document.getElementById('particulars').value = '';
+            document.getElementById('amount').value = '';
+            document.getElementById('payer').value = 'Chammu';
+        }
+
+        function showSpinner() {
+            document.getElementById('loadingSpinner').classList.remove('d-none');
+        }
+
+        function hideSpinner() {
+            document.getElementById('loadingSpinner').classList.add('d-none');
+        }
+
+        function showSuccessMessage() {
+            $('#successModal').modal('show');
+        }
+
+        function switchTab(tabId) {
+            $(`#${tabId}`).tab('show');
+        }
+
+        // Initialize the tables on page load
+        window.onload = () => {
+            updateExpenseTable();
+            calculateExpenses();
+        }
+    </script>
+
+    <!-- Bootstrap JS and dependencies -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>
