@@ -27,6 +27,7 @@
       text-align: center;
       color: #fff;
       padding: 20px;
+      overflow: hidden;
     }
 
     .hero::before {
@@ -68,6 +69,14 @@
       letter-spacing: 1.5px;
       font-family: 'Poppins', sans-serif;
       min-width: 270px;
+      user-select: none;
+      transition: background-color 0.3s ease;
+      cursor: default;
+    }
+
+    .countdown:hover {
+      background-color: #d9c8ff;
+      color: #3a2f66;
     }
 
     section {
@@ -83,6 +92,7 @@
       text-shadow: 1px 1px 2px #bdeaf3;
     }
 
+    /* Wedding details */
     .btn-pink {
       background-color: #53b3b0;
       color: white;
@@ -93,12 +103,15 @@
       box-shadow: 0 6px 12px rgba(83, 179, 176, 0.5);
       transition: background-color 0.3s ease;
       text-decoration: none;
+      display: inline-block;
     }
     .btn-pink:hover {
       background-color: #3a837f;
+      text-decoration: none;
       color: white;
     }
 
+    /* Gallery */
     .gallery img {
       width: 250px;
       height: 250px;
@@ -108,12 +121,12 @@
       transition: transform 0.3s ease;
       cursor: pointer;
     }
-
     .gallery img:hover {
       transform: scale(1.05);
       box-shadow: 0 12px 30px rgba(0,0,0,0.2);
     }
 
+    /* Footer */
     footer {
       background-color: #5a4d7a;
       color: #f7f3ff;
@@ -121,62 +134,69 @@
       padding: 1.5rem 1rem;
       font-weight: 500;
       font-size: 1.1rem;
+      box-shadow: 0 -3px 10px rgba(90, 77, 122, 0.6);
+      user-select: none;
     }
 
-    /* Floating hearts */
-    .heart {
+    /* Floating hearts and balloons */
+    #balloon-container {
       position: fixed;
-      width: 20px;
-      height: 20px;
-      background-image: url('https://cdn-icons-png.flaticon.com/512/616/616408.png');
-      background-size: contain;
-      background-repeat: no-repeat;
-      animation: fall 5s linear infinite;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
       pointer-events: none;
+      overflow: visible;
       z-index: 9999;
     }
-
-    @keyframes fall {
+    .floating-emoji {
+      position: absolute;
+      bottom: -50px;
+      animation-name: floatUp;
+      animation-timing-function: linear;
+      animation-fill-mode: forwards;
+      user-select: none;
+    }
+    @keyframes floatUp {
       0% {
-        transform: translateY(-100px) rotate(0deg);
+        transform: translateY(0) scale(1);
         opacity: 1;
       }
       100% {
-        transform: translateY(100vh) rotate(360deg);
+        transform: translateY(-110vh) scale(1.2);
         opacity: 0;
       }
     }
 
+    /* Responsive */
     @media (max-width: 576px) {
       h1.display-4 {
         font-size: 2.5rem;
       }
       .countdown {
         font-size: 1.5rem;
+        min-width: auto;
         padding: 12px 20px;
       }
     }
   </style>
 </head>
 <body>
-  <!-- Background Music -->
-  <audio id="bgMusic" loop>
-    <source src="media/wedding.mp3" type="audio/mp3" />
-    Your browser does not support the audio element.
-  </audio>
+
+  <div id="balloon-container"></div>
 
   <div class="container-fluid hero text-center">
     <h1 class="display-4">Riyaz ❤️ Abida</h1>
     <p class="lead">We're getting married on <strong>July 26, 2025</strong></p>
-    <div id="countdown" class="countdown mt-3"></div>
+    <div id="countdown" class="countdown mt-3" aria-label="Wedding Countdown"></div>
   </div>
 
   <section>
     <div class="container text-center">
       <h2 class="section-title">Wedding Details</h2>
-      <p><strong>Nikah Time:</strong> 11:30 AM</p>
-      <p><strong>Venue:</strong> HM Auditorium, Uppinangady</p>
-      <a href="https://www.google.com/maps/search/HM+Auditorium+Uppinangady" target="_blank" class="btn btn-pink">📍 Take Me There</a>
+      <p class="mb-2"><strong>Nikah Time:</strong> 11:30 AM</p>
+      <p class="mb-3"><strong>Venue:</strong> HM Auditorium, Uppinangady</p>
+      <a href="https://www.google.com/maps/search/HM+Auditorium+Uppinangady" target="_blank" class="btn btn-pink" rel="noopener noreferrer">📍 Take Me There</a>
     </div>
   </section>
 
@@ -201,55 +221,77 @@
     <p>With love, Riyaz & Abida 💞</p>
   </footer>
 
-  <!-- Countdown Script -->
+  <!-- Background music -->
+  <audio id="bg-music" src="media/wedding.mp3" preload="auto" loop></audio>
+
   <script>
+    // Countdown Script
     const countdown = document.getElementById("countdown");
     const weddingDate = new Date("2025-07-26T11:30:00").getTime();
 
     function updateCountdown() {
       const now = new Date().getTime();
       const distance = weddingDate - now;
+
       if (distance < 0) {
         countdown.innerHTML = "It's our wedding day! 💍";
         return;
       }
+
       const days = Math.floor(distance / (1000 * 60 * 60 * 24));
       const hrs = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
       const mins = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
       const secs = Math.floor((distance % (1000 * 60)) / 1000);
+
       countdown.innerHTML = `${days}d ${hrs}h ${mins}m ${secs}s`;
     }
 
     setInterval(updateCountdown, 1000);
     updateCountdown();
-  </script>
 
-  <!-- Start Music & Flowers on First Click -->
-  <script>
-    const music = document.getElementById("bgMusic");
-    let started = false;
+    // Floating hearts and balloons start on first scroll
+    window.addEventListener('scroll', function onScroll() {
+      const audio = document.getElementById('bg-music');
 
-    function createHeart() {
-      const heart = document.createElement("div");
-      heart.classList.add("heart");
-      heart.style.left = Math.random() * 100 + "vw";
-      heart.style.animationDuration = (Math.random() * 3 + 2) + "s";
-      document.body.appendChild(heart);
-
-      setTimeout(() => {
-        heart.remove();
-      }, 5000);
-    }
-
-    function startEffects() {
-      if (!started) {
-        music.play();
-        setInterval(createHeart, 300);
-        started = true;
+      if (audio.paused) {
+        audio.play().then(() => {
+          startFloatingEmojis();
+          window.removeEventListener('scroll', onScroll);
+        }).catch(err => {
+          console.log('Autoplay prevented:', err);
+        });
       }
-    }
+    });
 
-    document.addEventListener("click", startEffects);
+    function startFloatingEmojis() {
+      const container = document.getElementById("balloon-container");
+      let count = 0;
+      const maxCount = 100;
+
+      function createFloatingEmoji() {
+        const emoji = Math.random() > 0.5 ? "💖" : "🎈";
+        const el = document.createElement("div");
+        el.textContent = emoji;
+        el.className = "floating-emoji";
+        el.style.left = (Math.random() * 100) + "vw";
+        el.style.fontSize = (Math.random() * 24 + 24) + "px";
+        el.style.animationDuration = (Math.random() * 5 + 5) + "s";
+        container.appendChild(el);
+
+        setTimeout(() => {
+          container.removeChild(el);
+        }, 10000);
+      }
+
+      const interval = setInterval(() => {
+        if (count >= maxCount) {
+          clearInterval(interval);
+          return;
+        }
+        createFloatingEmoji();
+        count++;
+      }, 300);
+    }
   </script>
 </body>
 </html>
