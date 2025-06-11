@@ -185,9 +185,12 @@
 </head>
 <body>
 
-  <!-- 🎶 Background Music -->
-  <audio id="bgMusic" src="media/wedding.mp3" autoplay loop hidden></audio>
-
+  <!-- Background Music -->
+  <audio id="bgMusic" loop>
+    <source src="media/wedding.mp3" type="audio/mp3" />
+    Your browser does not support the audio element.
+  </audio>
+  
   <script>
     window.addEventListener("load", () => {
       const audio = document.getElementById("bgMusic");
@@ -273,6 +276,35 @@
     setInterval(updateCountdown, 1000);
     updateCountdown();
   </script>
+
+    <!-- Start Music & Flowers on First Click -->
+  <script>
+    const music = document.getElementById("bgMusic");
+    let started = false;
+
+    function createHeart() {
+      const heart = document.createElement("div");
+      heart.classList.add("heart");
+      heart.style.left = Math.random() * 100 + "vw";
+      heart.style.animationDuration = (Math.random() * 3 + 2) + "s";
+      document.body.appendChild(heart);
+
+      setTimeout(() => {
+        heart.remove();
+      }, 5000);
+    }
+
+    function startEffects() {
+      if (!started) {
+        music.play();
+        setInterval(createHeart, 300);
+        started = true;
+      }
+    }
+
+    document.addEventListener("click", startEffects);
+  </script>
+
 
 </body>
 </html>
