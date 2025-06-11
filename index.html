@@ -66,9 +66,8 @@
       border-radius: 50px;
       box-shadow: 0 4px 15px rgba(90, 77, 122, 0.3);
       letter-spacing: 1.5px;
+      font-family: 'Poppins', sans-serif;
       min-width: 270px;
-      cursor: default;
-      user-select: none;
     }
 
     section {
@@ -95,7 +94,6 @@
       transition: background-color 0.3s ease;
       text-decoration: none;
     }
-
     .btn-pink:hover {
       background-color: #3a837f;
       color: white;
@@ -123,7 +121,30 @@
       padding: 1.5rem 1rem;
       font-weight: 500;
       font-size: 1.1rem;
-      box-shadow: 0 -3px 10px rgba(90, 77, 122, 0.6);
+    }
+
+    /* Floating hearts */
+    .heart {
+      position: fixed;
+      width: 20px;
+      height: 20px;
+      background-image: url('https://cdn-icons-png.flaticon.com/512/616/616408.png');
+      background-size: contain;
+      background-repeat: no-repeat;
+      animation: fall 5s linear infinite;
+      pointer-events: none;
+      z-index: 9999;
+    }
+
+    @keyframes fall {
+      0% {
+        transform: translateY(-100px) rotate(0deg);
+        opacity: 1;
+      }
+      100% {
+        transform: translateY(100vh) rotate(360deg);
+        opacity: 0;
+      }
     }
 
     @media (max-width: 576px) {
@@ -135,98 +156,26 @@
         padding: 12px 20px;
       }
     }
-
-    /* Floating Heart */
-    .heart {
-      width: 20px;
-      height: 20px;
-      background-color: pink;
-      position: fixed;
-      animation: floatUp 4s linear infinite;
-      top: 100%;
-      left: 50%;
-      opacity: 0.7;
-      transform: rotate(45deg);
-      z-index: 9999;
-    }
-
-    .heart::before,
-    .heart::after {
-      content: "";
-      width: 20px;
-      height: 20px;
-      background-color: pink;
-      border-radius: 50%;
-      position: absolute;
-    }
-
-    .heart::before {
-      top: -10px;
-      left: 0;
-    }
-
-    .heart::after {
-      left: -10px;
-      top: 0;
-    }
-
-    @keyframes floatUp {
-      0% {
-        transform: translateY(0) rotate(45deg);
-        opacity: 0.7;
-      }
-      100% {
-        transform: translateY(-120vh) rotate(45deg);
-        opacity: 0;
-      }
-    }
-
   </style>
 </head>
 <body>
-
   <!-- Background Music -->
   <audio id="bgMusic" loop>
     <source src="media/wedding.mp3" type="audio/mp3" />
     Your browser does not support the audio element.
   </audio>
-  
-  <script>
-    window.addEventListener("load", () => {
-      const audio = document.getElementById("bgMusic");
-      setTimeout(() => {
-        audio.play().catch(() => {
-          console.log("Autoplay blocked. Click interaction needed.");
-        });
-      }, 1000);
-    });
-  </script>
-
-  <!-- 💖 Floating Hearts Script -->
-  <script>
-    function createHeart() {
-      const heart = document.createElement("div");
-      heart.className = "heart";
-      heart.style.left = Math.random() * 100 + "vw";
-      heart.style.animationDuration = (Math.random() * 3 + 2) + "s";
-      document.body.appendChild(heart);
-
-      setTimeout(() => heart.remove(), 5000);
-    }
-    setInterval(createHeart, 300);
-  </script>
 
   <div class="container-fluid hero text-center">
     <h1 class="display-4">Riyaz ❤️ Abida</h1>
     <p class="lead">We're getting married on <strong>July 26, 2025</strong></p>
-    <div id="countdown" class="countdown mt-3" aria-label="Wedding Countdown"></div>
+    <div id="countdown" class="countdown mt-3"></div>
   </div>
 
   <section>
     <div class="container text-center">
       <h2 class="section-title">Wedding Details</h2>
-      <p class="mb-2"><strong>Nikah Time:</strong> 11:30 AM</p>
-      <p class="mb-3"><strong>Venue:</strong> HM Auditorium, Uppinangady</p>
+      <p><strong>Nikah Time:</strong> 11:30 AM</p>
+      <p><strong>Venue:</strong> HM Auditorium, Uppinangady</p>
       <a href="https://www.google.com/maps/search/HM+Auditorium+Uppinangady" target="_blank" class="btn btn-pink">📍 Take Me There</a>
     </div>
   </section>
@@ -252,6 +201,7 @@
     <p>With love, Riyaz & Abida 💞</p>
   </footer>
 
+  <!-- Countdown Script -->
   <script>
     const countdown = document.getElementById("countdown");
     const weddingDate = new Date("2025-07-26T11:30:00").getTime();
@@ -259,17 +209,14 @@
     function updateCountdown() {
       const now = new Date().getTime();
       const distance = weddingDate - now;
-
       if (distance < 0) {
         countdown.innerHTML = "It's our wedding day! 💍";
         return;
       }
-
       const days = Math.floor(distance / (1000 * 60 * 60 * 24));
       const hrs = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
       const mins = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
       const secs = Math.floor((distance % (1000 * 60)) / 1000);
-
       countdown.innerHTML = `${days}d ${hrs}h ${mins}m ${secs}s`;
     }
 
@@ -277,7 +224,7 @@
     updateCountdown();
   </script>
 
-    <!-- Start Music & Flowers on First Click -->
+  <!-- Start Music & Flowers on First Click -->
   <script>
     const music = document.getElementById("bgMusic");
     let started = false;
@@ -304,7 +251,5 @@
 
     document.addEventListener("click", startEffects);
   </script>
-
-
 </body>
 </html>
