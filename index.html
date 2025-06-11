@@ -13,6 +13,7 @@
       color: #3b3a44;
       margin: 0;
       padding: 0;
+      overflow-x: hidden;
     }
 
     .hero {
@@ -26,13 +27,14 @@
       text-align: center;
       color: #fff;
       padding: 20px;
+      overflow: hidden;
     }
 
     .hero::before {
       content: "";
       position: absolute;
       top: 0; left: 0; right: 0; bottom: 0;
-      background: rgba(87, 205, 196, 0.6); /* mint green overlay */
+      background: rgba(87, 205, 196, 0.6);
       z-index: 0;
       border-radius: 0 0 80% 80% / 30%;
     }
@@ -59,8 +61,8 @@
     .countdown {
       font-size: 2rem;
       font-weight: 600;
-      background: #f6f0ff; /* lavender background */
-      color: #5a4d7a; /* dark lavender */
+      background: #f6f0ff;
+      color: #5a4d7a;
       padding: 15px 30px;
       border-radius: 50px;
       box-shadow: 0 4px 15px rgba(90, 77, 122, 0.3);
@@ -84,15 +86,14 @@
     .section-title {
       font-family: 'Great Vibes', cursive;
       font-size: 2.8rem;
-      color: #53b3b0; /* coral-teal tone */
+      color: #53b3b0;
       margin-bottom: 2rem;
       text-align: center;
       text-shadow: 1px 1px 2px #bdeaf3;
     }
 
-    /* Wedding details */
     .btn-pink {
-      background-color: #53b3b0; /* teal */
+      background-color: #53b3b0;
       color: white;
       border: none;
       padding: 12px 32px;
@@ -103,28 +104,31 @@
       text-decoration: none;
       display: inline-block;
     }
+
     .btn-pink:hover {
       background-color: #3a837f;
       text-decoration: none;
       color: white;
     }
 
-    /* Gallery */
     .gallery img {
+      width: 250px;
+      height: 250px;
+      object-fit: cover;
       border-radius: 15px;
       box-shadow: 0 8px 20px rgba(0,0,0,0.12);
       transition: transform 0.3s ease;
       cursor: pointer;
     }
+
     .gallery img:hover {
       transform: scale(1.05);
       box-shadow: 0 12px 30px rgba(0,0,0,0.2);
     }
 
-    /* Footer */
     footer {
-      background-color: #5a4d7a; /* dark lavender */
-      color: #f7f3ff; /* lavender */
+      background-color: #5a4d7a;
+      color: #f7f3ff;
       text-align: center;
       padding: 1.5rem 1rem;
       font-weight: 500;
@@ -133,7 +137,6 @@
       user-select: none;
     }
 
-    /* Responsive */
     @media (max-width: 576px) {
       h1.display-4 {
         font-size: 2.5rem;
@@ -145,17 +148,47 @@
       }
     }
 
-    .gallery img {
-  width: 250px;       /* fixed width */
-  height: 250px;      /* fixed height */
-  object-fit: cover;  /* crop to fill */
-  border-radius: 15px;
-  box-shadow: 0 8px 20px rgba(0,0,0,0.12);
-  transition: transform 0.3s ease;
-  cursor: pointer;
-}
+    /* Floating Hearts */
+    .heart {
+      position: absolute;
+      width: 20px;
+      height: 20px;
+      background-color: pink;
+      transform: rotate(45deg);
+      animation: floatUp 6s infinite;
+      opacity: 0.8;
+    }
 
+    .heart::before,
+    .heart::after {
+      content: "";
+      position: absolute;
+      width: 20px;
+      height: 20px;
+      background-color: pink;
+      border-radius: 50%;
+    }
 
+    .heart::before {
+      top: -10px;
+      left: 0;
+    }
+
+    .heart::after {
+      left: -10px;
+      top: 0;
+    }
+
+    @keyframes floatUp {
+      0% {
+        transform: translateY(0) rotate(45deg);
+        opacity: 1;
+      }
+      100% {
+        transform: translateY(-1000px) rotate(45deg);
+        opacity: 0;
+      }
+    }
   </style>
 </head>
 <body>
@@ -163,6 +196,8 @@
     <h1 class="display-4">Riyaz ❤️ Abida</h1>
     <p class="lead">We're getting married on <strong>July 26, 2025</strong></p>
     <div id="countdown" class="countdown mt-3" aria-label="Wedding Countdown"></div>
+    <!-- Floating hearts -->
+    <div id="hearts-container"></div>
   </div>
 
   <section>
@@ -219,6 +254,20 @@
 
     setInterval(updateCountdown, 1000);
     updateCountdown();
+
+    // Floating Hearts Script
+    const heartContainer = document.getElementById("hearts-container");
+    setInterval(() => {
+      const heart = document.createElement("div");
+      heart.className = "heart";
+      heart.style.left = Math.random() * window.innerWidth + "px";
+      heart.style.animationDuration = (3 + Math.random() * 3) + "s";
+      heartContainer.appendChild(heart);
+
+      setTimeout(() => {
+        heart.remove();
+      }, 6000);
+    }, 300);
   </script>
 </body>
 </html>
