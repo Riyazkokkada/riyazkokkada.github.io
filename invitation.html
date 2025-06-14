@@ -1,0 +1,176 @@
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+    <meta charset="UTF-8">
+    <title>Riyaz & Abida | Nikah Invitation</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Playfair+Display:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+        box-sizing: border-box;
+        }
+
+        body {
+        margin: 0;
+        padding: 0;
+        font-family: 'Playfair Display', serif;
+        background-color: #0f2c2c;
+        color: #fff;
+        overflow-x: hidden;
+        }
+
+        .invitation {
+        max-width: 800px;
+        margin: 20px auto;
+        padding: 60px 20px;
+        /*background: url('https://i.imgur.com/smiJx9Y.png') no-repeat center top;*/
+        background-size: contain;
+        background-color: rgba(0, 30, 30, 0.85);
+        border: 10px double gold;
+        border-radius: 20px;
+        box-shadow: 0 0 20px rgba(255, 255, 255, 0.15);
+        text-align: center;
+        }
+
+        .bismillah {
+        font-size: 1.6rem;
+        color: #d4af37;
+        font-family: 'Great Vibes', cursive;
+        margin-bottom: 10px;
+        }
+
+        .translation {
+        font-style: italic;
+        color: #ccc;
+        margin-bottom: 25px;
+        font-size: 0.95rem;
+        }
+
+        .invitation p, .invitation h1, .invitation .names, .invitation .with, .details {
+        margin: 10px 0;
+        }
+
+        h1 {
+        font-size: 2.2rem;
+        color: #f0e6d6;
+        }
+
+        .names {
+        font-size: 2rem;
+        font-weight: bold;
+        color: #fbbf24;
+        }
+
+        .with {
+        font-size: 1.2rem;
+        font-style: italic;
+        color: #aaa;
+        }
+
+        .details {
+        font-size: 1rem;
+        color: #eee;
+        }
+
+        .venue {
+        color: #fcd34d;
+        font-weight: bold;
+        }
+
+        /* Fireworks */
+        .firework {
+        position: absolute;
+        width: 6px;
+        height: 6px;
+        background: white;
+        border-radius: 50%;
+        animation: fireworks 1.5s linear forwards;
+        }
+
+        @keyframes fireworks {
+        0% {
+            transform: translate(0, 0) scale(1);
+            opacity: 1;
+        }
+        100% {
+            transform: translate(calc(-50px + 100px * var(--rand-x)), calc(-50px + 100px * var(--rand-y))) scale(0);
+            opacity: 0;
+        }
+        }
+
+        @media (max-width: 600px) {
+        .invitation {
+            padding: 40px 15px;
+            background-size: cover;
+        }
+
+        .bismillah {
+            font-size: 1.3rem;
+        }
+
+        h1 {
+            font-size: 1.8rem;
+        }
+
+        .names {
+            font-size: 1.5rem;
+        }
+
+        .details {
+            font-size: 0.95rem;
+        }
+        }
+    </style>
+    </head>
+    <body>
+
+    <div class="invitation">
+        <div class="bismillah">بِسْمِ اللّٰہِ الرَّحْمٰنِ الرَّحِیْمِ</div>
+        <div class="translation">"In the name of Allah, the Most Gracious, the Most Merciful"</div>
+
+        <p>Mrs. and Mr. Ibrahim<br>
+        cordially request your gracious presence and blessings<br>
+        on the auspicious occasion of the marriage of their beloved son</p>
+
+        <div class="names">Riyaz K</div>
+        <div class="with">with</div>
+        <div class="names">Abida Shehzadi</div>
+
+        <p>(D/o S Rafiq Ahmed)<br>
+        F. K. Manzil, Behind Jamiya Masjid, Androon Quilla, Raichur</p>
+
+        <div class="details">
+        Insha Allah<br>
+        on <strong>Saturday, 26th July 2025</strong><br>
+        <em>29th Muharram 1447 Hijri</em><br>
+        Nikah at <strong>11:00 AM</strong><br><br>
+        <span class="venue">HM Auditorium, Uppinangady</span><br><br>
+        With Best Wishes From:<br>
+        Abooswalih Zaini, Abdul Latheef,<br>
+        Brothers, Family & Friends
+        </div>
+    </div>
+
+    <!-- Fireworks -->
+    <script>
+        function random(min = 0, max = 1) {
+        return Math.random() * (max - min) + min;
+        }
+
+        function createFirework() {
+        const fw = document.createElement("div");
+        fw.className = "firework";
+        fw.style.left = random(0, window.innerWidth) + "px";
+        fw.style.top = random(0, window.innerHeight) + "px";
+        fw.style.setProperty('--rand-x', random());
+        fw.style.setProperty('--rand-y', random());
+        fw.style.backgroundColor = ["#fbbf24", "#f472b6", "#60a5fa", "#f87171", "#c084fc"][Math.floor(Math.random() * 5)];
+        document.body.appendChild(fw);
+        setTimeout(() => fw.remove(), 1500);
+        }
+
+        setInterval(createFirework, 200);
+    </script>
+
+    </body>
+    </html>
