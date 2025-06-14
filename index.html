@@ -27,7 +27,6 @@
       text-align: center;
       color: #fff;
       padding: 20px;
-      overflow: hidden;
     }
 
     .hero::before {
@@ -45,7 +44,7 @@
     }
 
     h1.display-4 {
-      font-family: 'Great Vibes', cursive;
+      font-family: 'Tangerine', cursive;
       font-size: 4rem;
       margin-bottom: 0.3em;
       text-shadow: 1px 1px 6px rgba(0,0,0,0.35);
@@ -67,16 +66,8 @@
       border-radius: 50px;
       box-shadow: 0 4px 15px rgba(90, 77, 122, 0.3);
       letter-spacing: 1.5px;
-      font-family: 'Poppins', sans-serif;
-      min-width: 270px;
       user-select: none;
-      transition: background-color 0.3s ease;
       cursor: default;
-    }
-
-    .countdown:hover {
-      background-color: #d9c8ff;
-      color: #3a2f66;
     }
 
     section {
@@ -92,7 +83,6 @@
       text-shadow: 1px 1px 2px #bdeaf3;
     }
 
-    /* Wedding details */
     .btn-pink {
       background-color: #53b3b0;
       color: white;
@@ -101,17 +91,16 @@
       border-radius: 30px;
       font-weight: 600;
       box-shadow: 0 6px 12px rgba(83, 179, 176, 0.5);
-      transition: background-color 0.3s ease;
       text-decoration: none;
       display: inline-block;
     }
+
     .btn-pink:hover {
       background-color: #3a837f;
       text-decoration: none;
       color: white;
     }
 
-    /* Gallery */
     .gallery img {
       width: 250px;
       height: 250px;
@@ -120,13 +109,16 @@
       box-shadow: 0 8px 20px rgba(0,0,0,0.12);
       transition: transform 0.3s ease;
       cursor: pointer;
+      display: block;
+      margin-left: auto;
+      margin-right: auto;
     }
+
     .gallery img:hover {
       transform: scale(1.05);
       box-shadow: 0 12px 30px rgba(0,0,0,0.2);
     }
 
-    /* Footer */
     footer {
       background-color: #5a4d7a;
       color: #f7f3ff;
@@ -134,59 +126,48 @@
       padding: 1.5rem 1rem;
       font-weight: 500;
       font-size: 1.1rem;
-      box-shadow: 0 -3px 10px rgba(90, 77, 122, 0.6);
-      user-select: none;
     }
 
-    /* Floating hearts and balloons */
-    #balloon-container {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100vw;
-      height: 100vh;
-      pointer-events: none;
-      overflow: visible;
-      z-index: 9999;
-    }
-    .floating-emoji {
-      position: absolute;
-      bottom: -50px;
-      animation-name: floatUp;
-      animation-timing-function: linear;
-      animation-fill-mode: forwards;
-      user-select: none;
-    }
-    @keyframes floatUp {
-      0% {
-        transform: translateY(0) scale(1);
-        opacity: 1;
-      }
-      100% {
-        transform: translateY(-110vh) scale(1.2);
-        opacity: 0;
-      }
-    }
-
-    /* Responsive */
     @media (max-width: 576px) {
       h1.display-4 {
         font-size: 2.5rem;
       }
       .countdown {
         font-size: 1.5rem;
-        min-width: auto;
         padding: 12px 20px;
+      }
+    }
+
+    .floating-hearts, .balloons {
+      position: fixed;
+      pointer-events: none;
+      z-index: 1000;
+    }
+
+    .floating-hearts i, .balloons i {
+      font-size: 24px;
+      animation: floatUp 3s linear infinite;
+      opacity: 0.8;
+    }
+
+    @keyframes floatUp {
+      0% {
+        transform: translateY(0) scale(1);
+        opacity: 1;
+      }
+      100% {
+        transform: translateY(-100vh) scale(1.5);
+        opacity: 0;
       }
     }
   </style>
 </head>
 <body>
+  <audio id="bg-music" src="media/wedding.mp3" preload="auto"></audio>
 
-  <div id="balloon-container"></div>
+  <div class="container-fluid hero text-center" id="hero">
+    <h1 class="display-4">Riyaz ❤️ <span style="text-transform: none;">Abida</span></h1>
 
-  <div class="container-fluid hero text-center">
-    <h1 class="display-4">Riyaz ❤️ Abida</h1>
     <p class="lead">We're getting married on <strong>July 26, 2025</strong></p>
     <div id="countdown" class="countdown mt-3" aria-label="Wedding Countdown"></div>
   </div>
@@ -194,8 +175,8 @@
   <section>
     <div class="container text-center">
       <h2 class="section-title">Wedding Details</h2>
-      <p class="mb-2"><strong>Nikah Time:</strong> 11:30 AM</p>
-      <p class="mb-3"><strong>Venue:</strong> HM Auditorium, Uppinangady</p>
+      <p><strong>Nikah Time:</strong> 11:30 AM</p>
+      <p><strong>Venue:</strong> HM Auditorium, Uppinangady</p>
       <a href="https://www.google.com/maps/search/HM+Auditorium+Uppinangady" target="_blank" class="btn btn-pink" rel="noopener noreferrer">📍 Take Me There</a>
     </div>
   </section>
@@ -204,13 +185,13 @@
     <div class="container">
       <h2 class="section-title">Our Memories</h2>
       <div class="row justify-content-center">
-        <div class="col-sm-6 col-md-4 mb-4">
+        <div class="col-12 col-sm-6 col-md-4 mb-4">
           <img src="photos/img4.jpeg" alt="Photo 1" class="img-fluid" />
         </div>
-        <div class="col-sm-6 col-md-4 mb-4">
+        <div class="col-12 col-sm-6 col-md-4 mb-4">
           <img src="photos/img2.jpeg" alt="Photo 2" class="img-fluid" />
         </div>
-        <div class="col-sm-6 col-md-4 mb-4">
+        <div class="col-12 col-sm-6 col-md-4 mb-4">
           <img src="photos/img5.jpeg" alt="Photo 3" class="img-fluid" />
         </div>
       </div>
@@ -221,77 +202,60 @@
     <p>With love, Riyaz & Abida 💞</p>
   </footer>
 
-  <!-- Background music -->
-  <audio id="bg-music" src="media/wedding.mp3" preload="auto" loop></audio>
+  <!-- Floating elements -->
+  <div class="floating-hearts" id="hearts-container"></div>
+  <div class="balloons" id="balloons-container"></div>
 
   <script>
-    // Countdown Script
+    const music = document.getElementById("bg-music");
+    let started = false;
+
+    function createFloating(icon, color, containerId) {
+      const el = document.createElement("i");
+      el.innerHTML = icon;
+      el.style.color = color;
+      el.style.position = "absolute";
+      el.style.left = Math.random() * 100 + "vw";
+      el.style.top = "100vh";
+      el.style.animationDuration = (2 + Math.random() * 2) + "s";
+      document.getElementById(containerId).appendChild(el);
+      setTimeout(() => el.remove(), 4000);
+    }
+
+    function startAnimations() {
+      for (let i = 0; i < 15; i++) {
+        createFloating("💖", "#ff69b4", "hearts-container");
+        createFloating("🎈", "#ffa500", "balloons-container");
+        createFloating("🌸", "#ffb6c1", "hearts-container");
+      }
+    }
+
+    document.body.addEventListener("click", () => {
+      if (!started) {
+        music.play();
+        started = true;
+        startAnimations();
+      }
+    });
+
+    // Countdown
     const countdown = document.getElementById("countdown");
     const weddingDate = new Date("2025-07-26T11:30:00").getTime();
-
     function updateCountdown() {
       const now = new Date().getTime();
       const distance = weddingDate - now;
-
       if (distance < 0) {
         countdown.innerHTML = "It's our wedding day! 💍";
         return;
       }
-
       const days = Math.floor(distance / (1000 * 60 * 60 * 24));
       const hrs = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
       const mins = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
       const secs = Math.floor((distance % (1000 * 60)) / 1000);
-
       countdown.innerHTML = `${days}d ${hrs}h ${mins}m ${secs}s`;
     }
-
     setInterval(updateCountdown, 1000);
     updateCountdown();
-
-    // Floating hearts and balloons start on first scroll
-    window.addEventListener('scroll', function onScroll() {
-      const audio = document.getElementById('bg-music');
-
-      if (audio.paused) {
-        audio.play().then(() => {
-          startFloatingEmojis();
-          window.removeEventListener('scroll', onScroll);
-        }).catch(err => {
-          console.log('Autoplay prevented:', err);
-        });
-      }
-    });
-
-    function startFloatingEmojis() {
-      const container = document.getElementById("balloon-container");
-      let count = 0;
-      const maxCount = 100;
-
-      function createFloatingEmoji() {
-        const emoji = Math.random() > 0.5 ? "💖" : "🎈" : "🌸" : "🌼";
-        const el = document.createElement("div");
-        el.textContent = emoji;
-        el.className = "floating-emoji";
-        el.style.left = (Math.random() * 100) + "vw";
-        el.style.fontSize = (Math.random() * 24 + 24) + "px";
-        el.style.animationDuration = (Math.random() * 5 + 5) + "s";
-        container.appendChild(el);
-
-        setTimeout(() => {
-          container.removeChild(el);
-        }, 10000);
-      }
-
-      const interval = setInterval(() => {
-        if (count >= maxCount) {
-          clearInterval(interval);
-          return;
-        }
-        createFloatingEmoji();
-        count++;
-      }, 300);
-    }
   </script>
 </body>
 </html>
