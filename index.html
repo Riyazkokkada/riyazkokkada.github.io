@@ -44,7 +44,7 @@
     }
 
     h1.display-4 {
-      font-family: 'Tangerine', cursive;
+      font-family: 'Great Vibes', cursive;
       font-size: 4rem;
       margin-bottom: 0.3em;
       text-shadow: 1px 1px 6px rgba(0,0,0,0.35);
@@ -138,16 +138,13 @@
       }
     }
 
-    .floating-hearts, .balloons {
+    .floating {
       position: fixed;
       pointer-events: none;
-      z-index: 1000;
-    }
-
-    .floating-hearts i, .balloons i {
       font-size: 24px;
-      animation: floatUp 3s linear infinite;
+      animation: floatUp 4s linear;
       opacity: 0.8;
+      z-index: 9999;
     }
 
     @keyframes floatUp {
@@ -162,15 +159,19 @@
     }
   </style>
   <link href="https://fonts.googleapis.com/css2?family=Parisienne&display=swap" rel="stylesheet">
+
 </head>
 <body>
-  <audio id="bg-music" src="media/wedding.mp3" preload="auto"></audio>
+  <audio id="bg-music" src="media/wedding.mp3" preload="auto" autoplay loop></audio>
 
   <div class="container-fluid hero text-center" id="hero">
-
+    <!-- Inside Hero Title -->
     <h1 class="display-4">
-     <span style="font-family: 'Parisienne', cursive; font-size: 4.5rem; color: #fff4fb;">Riyaz ❤️ Abida</span>
+     Riyaz ❤️ <span style="font-family: 'Parisienne', cursive; font-size: 4.5rem; color: #fff4fb;">Abida</span>
     </h1>
+
+
+
     <p class="lead">We're getting married on <strong>July 26, 2025</strong></p>
     <div id="countdown" class="countdown mt-3" aria-label="Wedding Countdown"></div>
   </div>
@@ -205,43 +206,30 @@
     <p>With love, Riyaz & Abida 💞</p>
   </footer>
 
-  <!-- Floating elements -->
-  <div class="floating-hearts" id="hearts-container"></div>
-  <div class="balloons" id="balloons-container"></div>
-
+  <!-- Floating Animation Container -->
   <script>
-    const music = document.getElementById("bg-music");
-    let started = false;
+    const emojis = ["💖", "🎈", "🌸", "💐", "🌷", "🌹", "💝", "🎉"];
+    const colors = ["#ff69b4", "#ffa500", "#ffb6c1", "#ff85a2", "#ffd1dc", "#e75480"];
 
-    function createFloating(icon, color, containerId) {
-      const el = document.createElement("i");
-      el.innerHTML = icon;
-      el.style.color = color;
-      el.style.position = "absolute";
+    function createFloatingEmoji() {
+      const el = document.createElement("div");
+      el.classList.add("floating");
+      el.innerHTML = emojis[Math.floor(Math.random() * emojis.length)];
       el.style.left = Math.random() * 100 + "vw";
       el.style.top = "100vh";
-      el.style.animationDuration = (2 + Math.random() * 2) + "s";
-      document.getElementById(containerId).appendChild(el);
-      setTimeout(() => el.remove(), 4000);
+      el.style.color = colors[Math.floor(Math.random() * colors.length)];
+      el.style.animationDuration = (3 + Math.random() * 2) + "s";
+      document.body.appendChild(el);
+      setTimeout(() => el.remove(), 5000);
     }
 
-    function startAnimations() {
-      for (let i = 0; i < 15; i++) {
-        createFloating("💖", "#ff69b4", "hearts-container");
-        createFloating("🎈", "#ffa500", "balloons-container");
-        createFloating("🌸", "#ffb6c1", "hearts-container");
-      }
-    }
+    setInterval(() => {
+      createFloatingEmoji();
+    }, 300);
+  </script>
 
-    document.body.addEventListener("click", () => {
-      if (!started) {
-        music.play();
-        started = true;
-        startAnimations();
-      }
-    });
-
-    // Countdown
+  <!-- Countdown Script -->
+  <script>
     const countdown = document.getElementById("countdown");
     const weddingDate = new Date("2025-07-26T11:30:00").getTime();
     function updateCountdown() {
