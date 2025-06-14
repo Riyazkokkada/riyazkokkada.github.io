@@ -16,6 +16,16 @@
       overflow-x: hidden;
     }
 
+    /* Fireworks canvas fixed behind content */
+    #fireworks-canvas {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100vw;
+      height: 100vh;
+      pointer-events: none;
+      z-index: 0;
+    }
+
     .hero {
       background: url('https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=1400&q=80') no-repeat center center/cover;
       height: 100vh;
@@ -27,6 +37,7 @@
       text-align: center;
       color: #fff;
       padding: 20px;
+      z-index: 1;
     }
 
     .hero::before {
@@ -72,6 +83,8 @@
 
     section {
       padding: 4rem 0;
+      position: relative;
+      z-index: 1;
     }
 
     .section-title {
@@ -126,6 +139,8 @@
       padding: 1.5rem 1rem;
       font-weight: 500;
       font-size: 1.1rem;
+      position: relative;
+      z-index: 1;
     }
 
     @media (max-width: 576px) {
@@ -137,41 +152,19 @@
         padding: 12px 20px;
       }
     }
-
-    .floating {
-      position: fixed;
-      pointer-events: none;
-      font-size: 24px;
-      animation: floatUp 4s linear;
-      opacity: 0.8;
-      z-index: 9999;
-    }
-
-    @keyframes floatUp {
-      0% {
-        transform: translateY(0) scale(1);
-        opacity: 1;
-      }
-      100% {
-        transform: translateY(-100vh) scale(1.5);
-        opacity: 0;
-      }
-    }
   </style>
   <link href="https://fonts.googleapis.com/css2?family=Parisienne&display=swap" rel="stylesheet">
-
 </head>
 <body>
   <audio id="bg-music" src="media/wedding.mp3" preload="auto" autoplay loop></audio>
 
+  <!-- Fireworks Canvas -->
+  <canvas id="fireworks-canvas"></canvas>
+
   <div class="container-fluid hero text-center" id="hero">
-    <!-- Inside Hero Title -->
     <h1 class="display-4">
-     <span style="font-family: 'Parisienne', cursive; font-size: 4.5rem; color: #fff4fb;">Riyaz ❤️ Abida</span>
+      <span style="font-family: 'Parisienne', cursive; font-size: 4.5rem; color: #fff4fb;">Riyaz ❤️ Abida</span>
     </h1>
-
-
-
     <p class="lead">We're getting married on <strong>July 26, 2025</strong></p>
     <div id="countdown" class="countdown mt-3" aria-label="Wedding Countdown"></div>
   </div>
@@ -206,28 +199,6 @@
     <p>With love, Riyaz & Abida 💞</p>
   </footer>
 
-  <!-- Floating Animation Container -->
-  <script>
-    const emojis = ["💖", "🎈", "🌸", "💐", "🌷", "🌹", "💝", "🎉"];
-    const colors = ["#ff69b4", "#ffa500", "#ffb6c1", "#ff85a2", "#ffd1dc", "#e75480"];
-
-    function createFloatingEmoji() {
-      const el = document.createElement("div");
-      el.classList.add("floating");
-      el.innerHTML = emojis[Math.floor(Math.random() * emojis.length)];
-      el.style.left = Math.random() * 100 + "vw";
-      el.style.top = "100vh";
-      el.style.color = colors[Math.floor(Math.random() * colors.length)];
-      el.style.animationDuration = (3 + Math.random() * 2) + "s";
-      document.body.appendChild(el);
-      setTimeout(() => el.remove(), 5000);
-    }
-
-    setInterval(() => {
-      createFloatingEmoji();
-    }, 300);
-  </script>
-
   <!-- Countdown Script -->
   <script>
     const countdown = document.getElementById("countdown");
@@ -247,6 +218,130 @@
     }
     setInterval(updateCountdown, 1000);
     updateCountdown();
+  </script>
+
+  <!-- Fireworks Script -->
+  <script>
+    (() => {
+      const canvas = document.getElementById('fireworks-canvas');
+      const ctx = canvas.getContext('2d');
+      let cw, ch;
+
+      function resize() {
+        cw = canvas.width = window.innerWidth;
+        ch = canvas.height = window.innerHeight;
+      }
+      window.addEventListener('resize', resize);
+      resize();
+
+      class Particle {
+        constructor(x, y, color, speed, angle, gravity = 0.05, friction = 0.98, decay = 0.015) {
+          this.x = x;
+          this.y = y;
+          this.color = color;
+          this.speed = speed;
+          this.angle = angle;
+          this.gravity = gravity;
+          this.friction = friction;
+          this.decay = decay;
+          this.alpha = 1;
+          this.vx = Math.cos(angle) * speed;
+          this.vy = Math.sin(angle) * speed;
+          this.size = Math.random() * 2 + 1;
+        }
+        update() {
+          this.vx *= this.friction;
+          this.vy *= this.friction;
+          this.vy += this.gravity;
+          this.x += this.vx;
+          this.y += this.vy;
+          this.alpha -= this.decay;
+        }
+        draw(ctx) {
+          ctx.save();
+          ctx.globalAlpha = this.alpha;
+          ctx.fillStyle = this.color;
+          ctx.beginPath();
+          ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+          ctx.fill();
+          ctx.restore();
+        }
+        isDead() {
+          return this.alpha <= 0;
+        }
+      }
+
+      class Firework {
+        constructor() {
+          this.x = Math.random() * cw;
+          this.y = ch;
+          this.targetY = Math.random() * ch * 0.5 + ch * 0.2;
+          this.speed = Math.random() * 4 + 6;
+          this.color = `hsl(${Math.random() * 360}, 100%, 60%)`;
+          this.particles = [];
+          this.exploded = false;
+        }
+        update() {
+          if (!this.exploded) {
+            this.y -= this.speed;
+            if (this.y <= this.targetY) {
+              this.explode();
+              this.exploded = true;
+            }
+          } else {
+            this.particles.forEach(p => p.update());
+            this.particles = this.particles.filter(p => !p.isDead());
+          }
+        }
+        explode() {
+          const particleCount = 30 + Math.floor(Math.random() * 30);
+          for (let i = 0; i < particleCount; i++) {
+            const angle = (Math.PI * 2 / particleCount) * i;
+            const speed = Math.random() * 5 + 2;
+            this.particles.push(new Particle(this.x, this.y, this.color, speed, angle));
+          }
+        }
+        draw(ctx) {
+          if (!this.exploded) {
+            ctx.save();
+            ctx.fillStyle = this.color;
+            ctx.beginPath();
+            ctx.arc(this.x, this.y, 3, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.restore();
+          } else {
+            this.particles.forEach(p => p.draw(ctx));
+          }
+        }
+        isDead() {
+          return this.exploded && this.particles.length === 0;
+        }
+      }
+
+      let fireworks = [];
+      let launchInterval = 0;
+
+      function animate() {
+        ctx.clearRect(0, 0, cw, ch);
+        if (launchInterval <= 0) {
+          fireworks.push(new Firework());
+          launchInterval = 20 + Math.random() * 30;
+        } else {
+          launchInterval--;
+        }
+
+        fireworks.forEach(fw => {
+          fw.update();
+          fw.draw(ctx);
+        });
+
+        fireworks = fireworks.filter(fw => !fw.isDead());
+
+        requestAnimationFrame(animate);
+      }
+
+      animate();
+    })();
   </script>
 </body>
 </html>
